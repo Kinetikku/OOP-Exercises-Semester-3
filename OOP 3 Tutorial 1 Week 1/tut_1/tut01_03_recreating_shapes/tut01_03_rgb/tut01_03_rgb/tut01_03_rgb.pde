@@ -12,4 +12,7 @@ line(10, 10, 190, 190);
 stroke(212, 0, 255);        // purple points
 for (int i=10; i<190; i=i+5)
   point(i, 100);
- 
+
+fill(12,81,194);
+strokeWeight(10);
+triangle(100,0,200,200,0,200);
