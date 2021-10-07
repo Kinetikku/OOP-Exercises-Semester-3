@@ -11,14 +11,22 @@ public class Bubble
     diameter=random(50);  // random diameter
   }
 
+  public void setX(float newX){
+    this.x = newX;
+  }
+  
+  public void setY(float newY){
+    this.y = newY;
+  }
+
   public float getX()
   {
-    return x;
+    return this.x;
   }
   
   public float getY()
   {
-    return y;
+    return this.y;
   }
 
   public float getDiameter()
@@ -34,8 +42,10 @@ public class Bubble
 
   public void move()
   {
-    y--;
-    x=x+random(-1, 1);
+    if(y < height){
+      y--;
+      x=x+random(-1, 1);
+    }
   }
 
   public String toString()

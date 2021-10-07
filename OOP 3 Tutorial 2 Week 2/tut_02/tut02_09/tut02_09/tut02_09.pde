@@ -3,7 +3,7 @@ float largestNum;
 ArrayList<Bubble> Bubble;
 
 void setup(){
-  size(400, 200);
+  size(600, 600);
   Bubble = new ArrayList<Bubble>();
   
   Bubble.add(new Bubble());
@@ -24,11 +24,5 @@ void draw(){
   for(Bubble bub: Bubble){
     bub.display();
     bub.move();
-  }
-  
-  for(Bubble bub: Bubble){
-    if(bub.getY() + 25 >= height){
-      
-    }
   }
 }
