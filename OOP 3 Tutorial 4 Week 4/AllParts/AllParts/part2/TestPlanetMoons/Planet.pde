@@ -6,16 +6,16 @@ public class Planet
   float radius;
   float distance;
   float speed;
-  Moon moon;
+  Moon[] moons;
 
 
   // add constructor here
-  public Planet(String name, float radius, float distance, float speed, Moon moon){
+  public Planet(String name, float radius, float distance, float speed, Moon[] moons){
     this.name = name;
     this.radius = radius;
     this.distance = distance;
     this.speed = speed;
-    this.moon = moon;
+    this.moons = moons;
   }
 
   // add other methods here
@@ -35,8 +35,18 @@ public class Planet
     return this.speed; 
   }
   
-  public Moon getMoon(){
-    return this.moon; 
+  public Moon[] getMoon(){
+    return this.moons; 
+  }
+  
+  public String toString(){
+    return "Planet: " + getName() + ": Radius = " + getRadius() + ": Distance = " + getDistance() + "has " + moons.length;
+  }
+  
+  public void printMoons(){
+    for(Moon moon : moons){
+          println(moon.getName());
+    }
   }
   
   // This will display the moon when other code is completed.  You don't need to understand this code.
@@ -47,8 +57,9 @@ public class Planet
     rotate(angle);
     translate(distance,0);
     fill(255, 255, 255);
-    ellipse(0, 0, radius*2, radius*2);    
-    moon.display();    
+    ellipse(0, 0, radius*2, radius*2);
+    moons[0].display();   
+    moons[1].display();    
     popMatrix();    
   }
 }

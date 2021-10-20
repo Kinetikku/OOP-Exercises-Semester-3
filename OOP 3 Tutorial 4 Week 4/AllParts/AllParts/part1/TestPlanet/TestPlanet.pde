@@ -18,5 +18,5 @@ void draw()
   translate(width/2, height/2);
 
   earth.display();
-  println(earth.toString());
+  println("Planets Name: " + earth.getName() + ": " + earth.getMoon().getName());
 }
