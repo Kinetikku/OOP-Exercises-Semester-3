@@ -13,5 +13,4 @@ public class InvalidDefenderLocationException extends Exception{
  public String getMessage() {
     return "InvalidDefenderLocationException:{Invalid defender location:"+getLocation()+"}"; 
  }
- 
 }

@@ -176,7 +176,6 @@ public class Game
       // Part 5 (projectile collisions with Baiter)
       if(baiter.blocksProjectile(defender.getProjectile())){
           defender.reloadProjectile();
-          defender.fire();
           background(230, 43, 30);
       }
 

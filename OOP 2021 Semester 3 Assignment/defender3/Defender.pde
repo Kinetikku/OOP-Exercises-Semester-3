@@ -7,11 +7,16 @@ public class Defender extends SpaceObject
   {
     super(location);
     this.projectile=null;
-    //Any marks for trying??
-    if(location.getX() < 0 || location.getX() > width || location.getY() < 0 || location.getY() > height){
-       println("InvalidDefenderLocationException:{Invalid defender location:"+getLocation()+"}");
-       exit();
+    try{
+      if(location.getX() < 0 || location.getX() > width || location.getY() < 0 || location.getY() > height){
+        throw new InvalidDefenderLocationException(location);
+      }
     }
+      catch(InvalidDefenderLocationException e){
+        println(e.getMessage());
+        exit();
+      }
+     
   }
   
   void incY(int direction) 
