@@ -35,7 +35,7 @@ public class Planet
     return this.speed; 
   }
   
-  public Moon[] getMoon(){
+  public Moon[] getMoons(){
     return this.moons; 
   }
   
