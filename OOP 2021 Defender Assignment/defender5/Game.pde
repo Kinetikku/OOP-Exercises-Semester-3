@@ -35,7 +35,8 @@ public class Game
 
   private Defender defender;  
   //private Lander lander;
-  private ArrayList<Lander> landers;
+  //private ArrayList<Lander> landers;
+  private ArrayList<Alien> aliens;
   private Baiter baiter;
   private ScreenData screenData;
 
@@ -54,12 +55,24 @@ public class Game
     //lander = new Lander(1, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0));
 
     // create landers arraylist here
-    landers = new ArrayList<Lander>();
+    //landers = new ArrayList<Lander>();
+    
+    // create aliens arraylist here
+    aliens = new ArrayList<Alien>();
     
     // add 3 landers to arraylist   
-    for (int i=0; i<Game.NO_OF_LANDERS; i++){
-      landers.add(new Lander(i, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));
-    }
+    //for (int i=0; i<Game.NO_OF_LANDERS; i++){
+    //  landers.add(new Lander(i, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));
+    //}
+    
+    //Part 5 create aliens
+    int alienCount=0; //<>//
+    for (int i=0; i<Game.NO_OF_LANDERS; i++, alienCount++)
+      aliens.add(new Lander(alienCount, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));    
+    for (int i=0; i<Game.NO_OF_MUTANTS; i++, alienCount++)
+      aliens.add(new Mutant(alienCount, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));
+
+    
     // no Baiter opponent for now (hence null value)
     baiter=null;
 
@@ -104,13 +117,13 @@ public class Game
     {
       int chance = (int)random(1, 100); // with current framerate we have a 1/10 chance per second that Baiter opponent is created
       if (chance==1)
-        baiter=new Baiter(new Location(width, (int)random(0, height)));
+        baiter=new Baiter(new Location(width, defender.getLocation().getY()), 8);
     }
 
     // display lander
     //lander.display();  // In Part 1 you may get a runtime error here when you shoot a lander opponent.  You'll sort this with ArrayList solution later.
-    for(Lander l: landers){
-       l.display();
+    for(Alien a: aliens){
+       a.display();
     }
 
 
@@ -122,68 +135,111 @@ public class Game
         baiter.display();
         
         // later you'll add code here to detect collision with defender
+        if(baiter.intersect(defender)){
+          //Remove Baiter
+          baiter=null;
+          //Remove Defender
+          defender=null;
+          //Respawn Defender Random
+          defender = new Defender(new Location(Game.DEFENDER_X, (int)random(0, height)));
+          //Lose a life
+          screenData.loseLife();
+          if(screenData.getLives() == 0)
+            exit();
+          //Red Background
+          background(171, 5, 30);
+          
+          //If zero lives, exit game
+        }
 
-        // Part 2 (lander collisions) - Later you'll add code here to detect collisions with landers       }
-          for(int i=0; i<landers.size(); i++){
-            if (baiter.intersect(landers.get(i))) 
+        // Part 2 (lander collisions) - Later you'll add code here to detect collisions with landers
+          for(int i=0; i<aliens.size(); i++){
+            if (baiter!=null && baiter.intersect(aliens.get(i))) 
             {
-              int label = landers.get(i).getNumber();
-              landers.remove(landers.get(i));
+              int label = aliens.get(i).getNumber();
+              aliens.remove(aliens.get(i));
               i--;
-              landers.add(new Lander(label, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));  // create/respawn a new lander
+              if(label == 3){
+                aliens.add(new Mutant(label, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));  // create/respawn a new mutant
+              }
+              else {
+                aliens.add(new Lander(label, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));  // create/respawn a new lander
+              }
               background(66, 245, 84);
             }
-           }
-          
-          
+          }   
       } 
-      else
+      else {
         baiter=null;
+        }
+          
     }
 
     // Part 1 (lander off-screen)
    
     
-    for(int i=0; i<landers.size(); i++){
-      if (!landers.get(i).visible()) 
+    for(int i=0; i<aliens.size(); i++){
+      if (!aliens.get(i).visible()) 
       {
-        int label = landers.get(i).getNumber();
-        landers.remove(landers.get(i));
+        int label = aliens.get(i).getNumber();
+        aliens.remove(aliens.get(i));
         i--;
-        landers.add(new Lander(label, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));  // create/respawn a new lander
+        if(label == 3){
+          aliens.add(new Mutant(label, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));  // create/respawn a new mutant
+        }
+        else {
+          aliens.add(new Lander(label, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));  // create/respawn a new lander
+        }
       }
     }
 
     // if the projectile is fired
-    if (defender.getProjectile()!=null) //<>//
+    if (defender.getProjectile()!=null)
     {
       // display the projectile      
       defender.getProjectile().display();
-    for(int i=0; i<landers.size(); i++){
+    for(int i=0; i<aliens.size(); i++){
       
       // Part 1 (projectile collisions with Lander)
-        if (landers.get(i).intersect(defender.getProjectile())==true)
+        if (aliens.get(i).intersect(defender.getProjectile())==true)
           {
-            int label = landers.get(i).getNumber();
-            landers.remove(landers.get(i));
+            int label = aliens.get(i).getNumber(); //<>//
+            aliens.remove(aliens.get(i));
             i--;
             //landers.remove(lander);
-            landers.add(new Lander(label, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));  // create/respawn a new lander
+            if(label == 3){
+              int score = screenData.getScore();
+              screenData.setScore(score + 300);
+              
+              aliens.add(new Mutant(label, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));  // create/respawn a new mutant
+            }
+            else {
+              int score = screenData.getScore();
+              screenData.setScore(score + 100);
+              
+              aliens.add(new Lander(label, new Location((int)random(ALIEN_X_MIN, ALIEN_X_MAX), 0)));  // create/respawn a new lander
+            }
             background(66, 245, 84);
           }
         }
 
       // Part 5 (projectile collisions with Baiter)
-      if(baiter.blocksProjectile(defender.getProjectile())){
+      if(baiter!=null){
+        if(baiter.blocksProjectile(defender.getProjectile())){
           defender.reloadProjectile();
           //insert non null projectile
           background(230, 43, 30);
-      }
+        }
 
-      // Part 1 (reload) - if the projectile goes beyond the right of screen reload!
-      if(defender.getProjectile().getLocation().getX() >= width){ //<>//
-        defender.reloadProjectile();
+        // Part 1 (reload) - if the projectile goes beyond the right of screen reload!
+        else if(defender.getProjectile().getLocation().getX() >= width){
+          defender.reloadProjectile();
+        }
       }
+      else if(defender.getProjectile().getLocation().getX() >= width){
+          defender.reloadProjectile();
+        }
+      
 
     }
   } // update

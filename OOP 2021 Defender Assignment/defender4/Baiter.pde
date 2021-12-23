@@ -5,9 +5,9 @@ public class Baiter extends SpaceObject
   //private float speed;   
   private int direction;
 
-  public Baiter(Location location)
+  public Baiter(Location location, float speed)
   {
-    super(location);
+    super(location, speed);
     //The Baiter is now slow because I am allowing the SpaceObject to define speed
     //Instead of assigning it below
     this.direction=-1;
